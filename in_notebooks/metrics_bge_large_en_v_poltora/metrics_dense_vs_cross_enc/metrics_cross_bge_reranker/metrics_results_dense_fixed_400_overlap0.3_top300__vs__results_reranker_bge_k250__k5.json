@@ -1,0 +1,15 @@
+{
+    "dense_file": "results_bge_large_en_v15/results_dense_bge_large/results_dense_fixed_400_overlap0.3_top300.jsonl",
+    "reranker_file": "results_bge_large_en_v15/results_reranker_bge/results_reranker_bge_k250.jsonl",
+    "k": 5,
+    "dense": {
+        "Recall@5": 0.8764044943820225,
+        "MRR": 0.7406915833620031,
+        "nDCG@5": 0.5011611702748392
+    },
+    "reranker": {
+        "Recall@5": 0.8539325842696629,
+        "MRR": 0.7448699720671109,
+        "nDCG@5": 0.4684122607259371
+    }
+}

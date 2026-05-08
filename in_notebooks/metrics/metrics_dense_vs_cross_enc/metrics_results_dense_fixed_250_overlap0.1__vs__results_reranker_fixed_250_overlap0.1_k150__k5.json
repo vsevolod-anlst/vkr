@@ -1,0 +1,15 @@
+{
+    "dense_file": "results/results_dense/results_dense_fixed_250_overlap0.1.jsonl",
+    "reranker_file": "results/results_reranker\\results_reranker_fixed_250_overlap0.1_k150.jsonl",
+    "k": 5,
+    "dense": {
+        "Recall@5": 0.8876404494382022,
+        "MRR": 0.7194756554307118,
+        "nDCG@5": 0.48402626258229897
+    },
+    "reranker": {
+        "Recall@5": 0.8876404494382022,
+        "MRR": 0.5576779026217231,
+        "nDCG@5": 0.4190334125574699
+    }
+}

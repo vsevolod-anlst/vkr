@@ -1,0 +1,274 @@
+---
+title: Manage Document Metadata
+sidebarTitle: Manage Metadata
+---
+
+## What is Metadata?
+
+### Overview
+
+Metadata is information that describes your data - essentially "data about data". Just as a book has a table of contents to help you understand its structure, metadata provides context about your data's content, origin, purpose, etc., making it easier for you to find and manage information in your knowledge base.
+
+This guide aims to help you understand metadata and effectively manage your knowledge base.
+
+### Core Concepts
+
+-  **Field:** The label of a metadata field (e.g., "author", "language").
+
+-  **Value:** The information stored in a metadata field (e.g., "Jack", "English").
+
+## How to Manage My Metadata?
+
+### Manage Metadata Fields in the Knowledge Base
+
+You can create, modify, and delete metadata fields in the knowledge base.
+
+> Any changes you make to metadata fields here affect your knowledge base globally.
+
+#### Get Started with the Metadata Panel
+
+**Access the Metadata Panel**
+
+To access the Metadata Panel, go to **Knowledge Base** page and click **Metadata**.
+
+
+**Built-in vs Custom Metadata**
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Built-in Metadata</th>
+      <th>Custom Metadata</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Location</td>
+      <td>Lower section of the Metadata panel</td>
+      <td>Upper section of the Metadata panel</td>
+    </tr>
+    <tr>
+      <td>Activation</td>
+      <td>Disabled by default; requires manual activation</td>
+      <td>Add as needed</td>
+    </tr>
+    <tr>
+      <td>Generation</td>
+      <td>System automatically extracts and generates field values</td>
+      <td>User-defined and manually added</td>
+    </tr>
+    <tr>
+      <td>Editing</td>
+      <td>Fields and values cannot be modified once generated</td>
+      <td>Fields and values can be edited or deleted</td>
+    </tr>
+    <tr>
+      <td>Scope</td>
+      <td>Applies to all existing and new documents when enabled</td>
+      <td>Stored in metadata list; requires manual assignment to documents</td>
+    </tr>
+    <tr>
+      <td>Fields</td>
+      <td>
+        System-defined fields include:
+        <ul>
+          <li>document_name (string)</li>
+          <li>uploader (string)</li>
+          <li>upload_date (time)</li>
+          <li>last_update_date (time)</li>
+          <li>source (string)</li>
+        </ul>
+      </td>
+      <td>No default fields; all fields must be manually created</td>
+    </tr>
+    <tr>
+      <td>Value Types</td>
+      <td>
+        <ul>
+          <li>String: For text values</li>
+          <li>Number: For numerical values</li>
+          <li>Time: For dates and timestamps</li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <li>String: For text values</li>
+          <li>Number: For numerical values</li>
+          <li>Time: For dates and timestamps</li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+#### Create New Metadata Fields
+
+To create a new metadata field:
+
+1. Click **+Add Metadata** to open the **New Metadata** dialog.
+
+2. Choose the value type.
+
+3. Name the field.
+
+> Naming rules: Use lowercase letters, numbers, and underscores only.
+
+4. Click **Save** to apply changes.
+
+#### Edit Metadata Fields
+
+To edit a metadata field:
+
+1. Click the edit icon next to a field to open the **Rename** dialog.
+
+2. Enter the new name in the **Name** field.
+
+> Note: You can only modify the field name, not the value type.
+
+3. Click **Save** to apply changes.
+
+> Note: Field changes update across all related documents in your knowledge base.
+
+#### Delete Metadata Fields
+
+To delete a metadata field, click the delete icon next to a field to delete it.
+
+> Note: Deleting a field deletes it and all its values from all documents in your knowledge base.
+
+### Edit Metadata 
+
+#### Bulk Edit Metadata in the Metadata Editor
+
+You can edit metadata in bulk in the knowledge base.
+
+**Access the Metadata Editor**
+
+To access the Metadata Editor:
+
+1. In the knowledge base, select documents using the checkboxes on the left.
+
+2. Click **Metadata** in the bottom action bar to open the Metadata Editor.
+
+**Bulk Add Metadata**
+
+To add metadata in bulk:
+
+1. Click **+Add Metadata** in the editor to:
+
+- Add existing fields from the dropdown or from the search box.
+
+- Create new fields via **+New Metadata**.
+   
+   > New fields are automatically added to the knowledge base.
+
+- Access the Metadata Panel to manage metadata fields via **Manage**.
+
+2. *(Optional)* Enter values for new fields.
+
+> The date picker is for time-type fields.
+
+3. Click **Save** to apply changes.
+
+**Bulk Update Metadata**
+
+To update metadata in bulk:
+
+1. In the editor:
+
+- **Add Values:** Type directly in the field boxes.
+
+- **Reset Values:** Click the blue dot that appears on hover.
+
+- **Delete Values:** Clear the field or delete the **Multiple Value** card.
+
+- **Delete fields:** Click the delete icon (fields appear struck through and grayed out).
+
+   > Note: This only deletes the field from this document, not from your knowledge base.
+
+2. Click **Save** to apply changes.
+
+**Set Update Scope**
+
+Use **Apply to All Documents** to control changes:
+
+- **Unchecked (Default)**: Updates only documents that already have the field.
+
+- **Checked**: Adds or updates fields across all selected documents.
+
+#### Edit Metadata on the Document Details Page
+
+You can edit a single document's metadata on its details page.
+
+**Access Metadata Edit Mode**
+
+To edit a single document's metadata:
+
+On the document details page, click **Start labeling** to begin editing.
+
+**Add Metadata**
+
+To add a single document's metadata fields and values:
+
+1. Click **+Add Metadata** to:
+
+   - Create new fields via **+New Metadata**.
+
+   > New fields are automatically added to the knowledge base.
+   
+   - Add existing fields from the dropdown or from the search box.
+
+   - Access the Metadata Panel via **Manage**.
+
+2. *(Optional)* Enter values for new fields.
+
+3. Click **Save** to apply changes.
+
+**Edit Metadata**
+
+To update a single document's metadata fields and values:
+
+1. Click **Edit** in the top right to begin editing.
+
+2. Edit metadata:
+   - **Update Values:** Type directly in value fields or delete it.
+
+   > Note: You can only modify the value, not the value name.
+   
+   - **Delete Fields:** Click the delete icon.
+
+   > Note: This only deletes the field from this document, not from your knowledge base.
+
+3. Click **Save** to apply changes.
+
+## How to Filter Documents with Metadata?
+
+See **Metadata Filtering** in *[Integrate Knowledge Base within Application](/en/use-dify/knowledge/integrate-knowledge-within-application)*.
+
+
+## FAQ
+
+- **What can I do with metadata?**
+
+   - Find information faster with smart filtering.
+
+   - Control access to sensitive content.
+
+   - Organize data more effectively.
+
+   - Automate workflows based on metadata rules.
+
+- **Fields vs Values: What is the difference?**
+
+|  | Definition | Characteristics | Examples |
+| --- | --- | --- | --- |
+| Metadata Fields in the Metadata Panel | System-defined attributes that describe document properties | Global fields accessible across all documents in the knowledge base | Author, Type, Date, etc. |
+| Metadata Value on a document's detail page | Custom metadata tagged according to individual document requirements | Unique metadata values assigned based on document content and context | The "Author" field in Document A is set to "Mary" value, while in Document B it is set to "John" value. |
+
+- **How do different delete options work?**
+
+| Action | Steps | Impact | Outcome |
+| --- | --- | --- | --- |
+| Delete field in the Metadata Panel | In the Metadata Panel, click delete icon next to field | Global - affects all documents | Field and all values permanently deleted from the knowledge base |
+| Delete field in the Metadata Editor | In the Metadata Editor, click delete icon next to field | Selected documents only | Field deleted from selected documents; remains in the knowledge base |
+| Delete field on the document detail page | In the Edit Mode, click delete icon next to field | Current document only | Field deleted from current document; remains in the knowledge base |
