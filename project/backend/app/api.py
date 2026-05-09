@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from app.database import SessionLocal
-from app.models import QueryLog
+from app.rag.model import QueryLog
 from app.tasks import process_question
 
 app = FastAPI()

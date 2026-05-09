@@ -1,2 +1,5 @@
 alembic
 psycopg2-binary
+celery
+uvicorn[standard]
+fastapi

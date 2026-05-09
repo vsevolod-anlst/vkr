@@ -1,7 +1,7 @@
 # backend/app/tasks.py
 
 from app.database import SessionLocal
-from app.models import QueryLog
+from app.rag.model import QueryLog
 from app.celery_app import celery_app
 
 @celery_app.task
