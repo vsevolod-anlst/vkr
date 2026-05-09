@@ -4,7 +4,7 @@ celery
 uvicorn[standard]
 fastapi
 torch==2.2.0 --index-url https://download.pytorch.org/whl/cu121
-sentence-transformers==2.2.2
+sentence-transformers==3.0.1
 transformers==4.39.3
 accelerate==0.27.2
 numpy==1.26.4
