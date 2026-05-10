@@ -1,5 +1,3 @@
-# backend/app/tasks.py
-
 from app.celery_app import celery_app
 from app.database import SessionLocal
 from app.rag.retriever import retrieve
@@ -8,9 +6,10 @@ from app.rag.generator import (
     generate_rag_answer_local
 )
 from app.rag.model import QueryLog
+from app.tasks_send import send_message
 import time
 
-@celery_app.task
+@celery_app.task(queue="rag")
 def process_question(question: str, chat_id: int, user_id: int):
     start = time.time()
 
@@ -44,5 +43,6 @@ def process_question(question: str, chat_id: int, user_id: int):
     db.refresh(log)
 
     print(f"[RAG] Answer ready for user_id={user_id}, chat_id={chat_id}, log_id={log.id}")
+    send_message.delay(chat_id, answer)
 
     return {"log_id": log.id}

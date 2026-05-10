@@ -8,7 +8,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 
 TELEGRAM_TOKEN = os.getenv("TELEGRAM_TOKEN")
-BACKEND_URL = os.getenv("BACKEND_URL", "http://rag-nginx/ask") ## проверить
+BACKEND_URL = os.getenv("BACKEND_URL", "http://rag-nginx/ask")
 
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher(bot)

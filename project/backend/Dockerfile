@@ -1,6 +1,7 @@
 FROM python:3.10-slim
 
 RUN apt-get update && apt-get install -y \
+    bash \
     build-essential \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*

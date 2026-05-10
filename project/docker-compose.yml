@@ -10,6 +10,11 @@ services:
     command: uvicorn app.api:app --host 0.0.0.0 --port 8000
     volumes:
       - ./backend:/app
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     env_file:
       - .env
     depends_on:
@@ -25,10 +30,15 @@ services:
       dockerfile: Dockerfile
     container_name: rag-worker
     restart: always
-    command: celery -A app.celery_app.celery_app worker --loglevel=INFO --concurrency=1
+    command: celery -A app.celery_app.celery_app worker --loglevel=INFO -Q rag --concurrency=1
     volumes:
       - ./backend:/app
       - hf_cache:/root/.cache/huggingface
+    healthcheck:
+      test: ["CMD-SHELL", "bash /app/healthcheck_gpu.sh"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     env_file:
       - .env
     depends_on:
@@ -101,6 +111,11 @@ services:
     image: nginx:latest
     container_name: rag-nginx
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "nginx -t"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     ports:
       - "80:80"
     volumes:
@@ -116,6 +131,11 @@ services:
       dockerfile: Dockerfile
     container_name: rag-telegram-bot
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
     environment:
       - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
       - BACKEND_URL=http://rag-nginx/ask
@@ -123,6 +143,43 @@ services:
       - nginx
     networks:
       - rag-net
+  
+  sender:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: rag-sender
+    restart: always
+    command: celery -A app.celery_app.celery_app worker --loglevel=INFO -Q send_message --concurrency=1
+    volumes:
+      - ./backend:/app
+    healthcheck:
+      test: ["CMD-SHELL", "curl -s https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe >/dev/null"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+    networks:
+      - rag-net
+
+  flower:
+    image: mher/flower
+    container_name: rag-flower
+    restart: always
+    entrypoint: ["celery"]
+    command: ["--broker=amqp://guest:guest@rag-rabbitmq:5672//", "flower"]
+    ports:
+      - "5555:5555"
+    depends_on:
+      - rabbitmq
+    networks:
+      - rag-net
+
 
 
 volumes:
