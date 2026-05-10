@@ -1,4 +1,17 @@
 import os
+os.environ["HF_HOME"] = "/root/.cache/huggingface"
+os.environ["HUGGINGFACE_HUB_CACHE"] = "/root/.cache/huggingface"
+os.environ["TRANSFORMERS_CACHE"] = "/root/.cache/huggingface"
+
+os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
+
+from huggingface_hub import login
+login(token=os.environ["HF_TOKEN"])
+
+
+
+
+
 import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
@@ -8,9 +21,28 @@ CHUNKS_PATH = os.path.join(BASE_DIR, "data", "chunks.jsonl")
 EMB_PATH = os.path.join(BASE_DIR, "data", "embeddings.npy")
 
 
-print("[RAG] Loading E5-Large-V2 model...")
-MODEL_E5 = SentenceTransformer("intfloat/e5-large-v2")
-print("[RAG] Model loaded.")
+MODEL_E5 = None
+CHUNKS = None
+EMBS = None
+
+def load_retriever():
+
+    global MODEL_E5, CHUNKS, EMBS
+
+    if MODEL_E5 is not None:
+        return
+
+    print("[RAG] Loading E5-Large-V2 model...")
+    MODEL_E5 = SentenceTransformer("intfloat/e5-large-v2")
+    print("[RAG] Model loaded.")
+
+    print("[RAG] Loading chunks...")
+    CHUNKS, _ = load_chunks()
+    print(f"[RAG] Loaded {len(CHUNKS)} chunks.")
+
+    print("[RAG] Loading embeddings...")
+    EMBS = np.load(EMB_PATH)
+    print(f"[RAG] Embeddings loaded: {EMBS.shape}")
 
 
 def load_chunks(path=CHUNKS_PATH):
@@ -25,17 +57,12 @@ def load_chunks(path=CHUNKS_PATH):
             texts.append(entry.get("text", ""))
     return chunks, texts
 
-print("[RAG] Loading chunks...")
-CHUNKS, _ = load_chunks()
-print(f"[RAG] Loaded {len(CHUNKS)} chunks.")
-
-
-print("[RAG] Loading embeddings...")
-EMBS = np.load(EMB_PATH)
-print(f"[RAG] Embeddings loaded: {EMBS.shape}")
 
 
 def dense_search(query: str, top_k: int = 5):
+
+    load_retriever()
+
     query_emb = MODEL_E5.encode(
         "query: " + query,
         normalize_embeddings=True

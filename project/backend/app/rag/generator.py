@@ -1,4 +1,11 @@
-# app/rag/generator.py
+import os
+os.environ["HF_HOME"] = "/root/.cache/huggingface"
+os.environ["HUGGINGFACE_HUB_CACHE"] = "/root/.cache/huggingface"
+os.environ["TRANSFORMERS_CACHE"] = "/root/.cache/huggingface"
+os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
+
+from huggingface_hub import login
+login(token=os.environ["HF_TOKEN"])
 
 import re
 import torch
@@ -11,21 +18,32 @@ hf_logging.set_verbosity_info()
 
 MODEL_NAME = "Qwen/Qwen2.5-3B-Instruct"
 
-print("[GEN] Loading Qwen generator...")
+tokenizer = None
+model = None
 
-tokenizer = AutoTokenizer.from_pretrained(
-    MODEL_NAME,
-    trust_remote_code=True
-)
 
-model = AutoModelForCausalLM.from_pretrained(
-    MODEL_NAME,
-    device_map="auto",
-    torch_dtype=torch.float16,
-    trust_remote_code=True
-)
+def load_model():
 
-print("[GEN] Generator loaded.")
+    global tokenizer, model
+
+    if tokenizer is not None and model is not None:
+        return
+
+    print("[GEN] Loading Qwen generator...")
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        MODEL_NAME,
+        trust_remote_code=True
+    )
+
+    model = AutoModelForCausalLM.from_pretrained(
+        MODEL_NAME,
+        device_map="auto",
+        torch_dtype=torch.float16,
+        trust_remote_code=True
+    )
+
+    print("[GEN] Generator loaded.")
 
 
 
@@ -87,6 +105,9 @@ def generate_rag_answer_local(
     temperature: float = 0.0
 ) -> str:
 
+    load_model()
+    print("[GEN] Qwen generation started")
+
     query = (
         query.replace("<|im_start|>", "")
              .replace("<|im_end|>", "")
@@ -128,5 +149,7 @@ def generate_rag_answer_local(
 
     answer = text.split("<|im_start|>assistant")[-1]
     answer = answer.split("<|im_end|>")[0].strip()
+    print("[GEN] Qwen generation finished")
+
 
     return answer
