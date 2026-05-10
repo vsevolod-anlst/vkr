@@ -57,6 +57,9 @@ services:
       dockerfile: Dockerfile
     container_name: rag-migrations
     command: alembic upgrade head
+    volumes:
+      - ./backend/alembic:/app/alembic
+      - ./backend/app:/app/app
     depends_on:
       - db
     env_file:
@@ -106,6 +109,21 @@ services:
       - backend
     networks:
       - rag-net
+
+  telegram-bot:
+    build:
+      context: ./bot
+      dockerfile: Dockerfile
+    container_name: rag-telegram-bot
+    restart: always
+    environment:
+      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
+      - BACKEND_URL=http://rag-nginx/ask
+    depends_on:
+      - nginx
+    networks:
+      - rag-net
+
 
 volumes:
   pgdata:

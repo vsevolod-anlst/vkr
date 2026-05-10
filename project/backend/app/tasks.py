@@ -10,17 +10,12 @@ from app.rag.generator import (
 from app.rag.model import QueryLog
 import time
 
-
 @celery_app.task
-def process_question(question: str):
+def process_question(question: str, chat_id: int, user_id: int):
     start = time.time()
 
-
     retrieved = retrieve(question, top_k=5)
-
-
     chunks_map = {r["chunk_id"]: r["text"] for r in retrieved}
-
 
     context = build_context_from_retrieved(
         retrieved_list=retrieved,
@@ -29,7 +24,6 @@ def process_question(question: str):
         max_chars=8000
     )
 
-
     answer = generate_rag_answer_local(
         query=question,
         context=context,
@@ -37,15 +31,18 @@ def process_question(question: str):
         temperature=0.0
     )
 
-
     db = SessionLocal()
     log = QueryLog(
         question=question,
         answer=answer,
-        generation_time=time.time() - start
+        generation_time=time.time() - start,
+        chat_id=chat_id,
+        user_id=user_id
     )
     db.add(log)
     db.commit()
     db.refresh(log)
+
+    print(f"[RAG] Answer ready for user_id={user_id}, chat_id={chat_id}, log_id={log.id}")
 
     return {"log_id": log.id}

@@ -1,29 +1,38 @@
-# backend/app/api.py
-
 from fastapi import FastAPI
+from pydantic import BaseModel
 from app.database import SessionLocal
 from app.rag.model import QueryLog
+from app.tasks import process_question
 
 
 
 app = FastAPI()
 
+class AskRequest(BaseModel):
+    question: str
+    chat_id: int
+    user_id: int
+
 @app.post("/ask")
-def ask(question: str):
-    from app.tasks import process_question
-    task = process_question.delay(question)
+def ask(req: AskRequest):
+    task = process_question.delay(req.question, req.chat_id, req.user_id)
     return {"task_id": task.id}
 
-@app.get("/result/{log_id}")
-def get_result(log_id: int):
+@app.get("/history/{user_id}") # надо бы ограничить количество тут чтобы оно не захлебнулось если запросов прям куча, потому что покажем мы все равно посление 10
+def get_history(user_id: int):
     db = SessionLocal()
-    row = db.query(QueryLog).filter(QueryLog.id == log_id).first()
-    if not row:
-        return {"status": "not_ready"}
-    return {
-        "id": row.id,
-        "question": row.question,
-        "answer": row.answer,
-        "generation_time": row.generation_time,
-        "created_at": row.created_at
-    }
+    rows = (
+        db.query(QueryLog)
+        .filter(QueryLog.user_id == user_id)
+        .order_by(QueryLog.created_at.desc())
+        .all()
+    )
+    return [
+        {
+            "id": r.id,
+            "question": r.question,
+            "answer": r.answer,
+            "created_at": r.created_at
+        } 
+        for r in rows
+    ]
