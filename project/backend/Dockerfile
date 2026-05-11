@@ -13,6 +13,8 @@ COPY requirements.txt .
 
 ENV PIP_DEFAULT_TIMEOUT=300
 
+RUN pip install --no-cache-dir torch==2.1.2 \
+    --index-url https://download.pytorch.org/whl/cu121
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
