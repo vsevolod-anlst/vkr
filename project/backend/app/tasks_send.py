@@ -11,7 +11,7 @@ last_sent_global = 0.0
 last_sent_per_chat = {}
 
 @celery_app.task(queue="send_message", max_retries=5)
-def send_message(chat_id: int, text: str):
+def send_message(chat_id: int, text: str, message_id: int):
     global last_sent_global, last_sent_per_chat
 
     with lock:
@@ -27,7 +27,7 @@ def send_message(chat_id: int, text: str):
             time.sleep(MIN_DELAY_PER_CHAT - delta_chat)
 
         try:
-            send_telegram_message(chat_id, text)
+            send_telegram_message(chat_id, text, message_id)
         except Exception as e:
             raise send_message.retry(exc=e, countdown=1)
 

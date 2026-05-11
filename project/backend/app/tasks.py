@@ -10,7 +10,7 @@ from app.tasks_send import send_message
 import time
 
 @celery_app.task(queue="rag")
-def process_question(question: str, chat_id: int, user_id: int):
+def process_question(question: str, chat_id: int, user_id: int, message_id: int):
     start = time.time()
 
     retrieved = retrieve(question, top_k=5)
@@ -43,6 +43,6 @@ def process_question(question: str, chat_id: int, user_id: int):
     db.refresh(log)
 
     print(f"[RAG] Answer ready for user_id={user_id}, chat_id={chat_id}, log_id={log.id}")
-    send_message.delay(chat_id, answer)
+    send_message.delay(chat_id, answer, message_id)
 
     return {"log_id": log.id}

@@ -132,13 +132,12 @@ services:
     container_name: rag-telegram-bot
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "curl -s https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe >/dev/null"]
+      test: ["CMD-SHELL", "pgrep -f bot.py >/dev/null && curl -m 3 -f https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe || exit 0"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
-    environment:
-      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
-      - BACKEND_URL=http://rag-nginx/ask
+    env_file:
+      - .env
     depends_on:
       - nginx
     networks:
@@ -154,12 +153,10 @@ services:
     volumes:
       - ./backend:/app
     healthcheck:
-      test: ["CMD-SHELL", "curl -s https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe >/dev/null"]
+      test: ["CMD-SHELL", "pgrep -f 'celery worker' >/dev/null && curl -m 3 -f https://api.telegram.org/bot$TELEGRAM_TOKEN/getMe || exit 0"]
       interval: 30s
-      timeout: 10s
+      timeout: 5s
       retries: 3
-    environment:
-      - TELEGRAM_TOKEN=${TELEGRAM_TOKEN}
     env_file:
       - .env
     depends_on:

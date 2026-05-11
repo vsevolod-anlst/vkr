@@ -6,15 +6,17 @@ os.environ["TRANSFORMERS_CACHE"] = "/root/.cache/huggingface"
 os.environ["HF_TOKEN"] = os.getenv("HF_TOKEN")
 
 from huggingface_hub import login
-login(token=os.environ["HF_TOKEN"])
-
-
-
-
-
 import json
 import numpy as np
 from sentence_transformers import SentenceTransformer
+
+def ensure_hf_login():
+    token = os.environ.get("HF_TOKEN")
+    if token:
+        try:
+            login(token=token)
+        except Exception as e:
+            print("HF login failed:", e)
 
 BASE_DIR = os.path.dirname(__file__)
 CHUNKS_PATH = os.path.join(BASE_DIR, "data", "chunks.jsonl")
