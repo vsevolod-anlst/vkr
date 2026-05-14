@@ -19,7 +19,7 @@ def ask(req: AskRequest):
     task = process_question.delay(req.question, req.chat_id, req.user_id, req.message_id)
     return {"task_id": task.id}
 
-@app.get("/history/{user_id}") # надо бы ограничить количество тут чтобы оно не захлебнулось если вопросов прям куча была, потому что покажем мы все равно посление 10
+@app.get("/history/{user_id}")
 def get_history(user_id: int):
     db = SessionLocal()
     rows = (
